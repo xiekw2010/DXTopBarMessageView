@@ -27,3 +27,10 @@ A category base on UIViewController, easy to use and custom.
 1. Support the device rotation, just use it.
 2. In iOS7 it change your viewController's property edgesForExtendedLayout to UIRectEdgeNone. 
 3. If you want to custom it, just change to code of TopWarningView class. And don't worry about the iconIgv property, a nil image is acceptable, the layout will adjust to middle alignment;
+
+
+### Finally
+
+Demo sceenShot
+
+![anyStr1](/sceenShots/screenShot1.png "demo")
