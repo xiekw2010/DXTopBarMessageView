@@ -5,6 +5,8 @@ Sometimes we think the alert view is a little annoying when we alert again and a
 
 Sometimes it will be more delightful if you show the message on the top of your viewController and then it dimiss automatically after a while.
 
+If you have used instagram, maybe you will have a figure on that.
+
 ## This maybe is your solution 
 
 A category base on UIViewController, easy to use and custom.
@@ -33,4 +35,4 @@ A category base on UIViewController, easy to use and custom.
 
 Demo sceenShot
 
-![anyStr1](/sceenShots/screenShot1.png "demo")
+![anyStr1](/screenShots/screenShot1.png "demo")
