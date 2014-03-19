@@ -75,7 +75,7 @@
         CGRect selfFrame = self.frame;
         selfFrame.origin.y -= CGRectGetHeight(selfFrame);
         self.frame = selfFrame;
-        selfFrame.origin.y = 1;
+        selfFrame.origin.y = 0;
         
         [UIView animateWithDuration:0.25f animations:^{
             self.frame = selfFrame;
