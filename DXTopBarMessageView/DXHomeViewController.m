@@ -30,11 +30,16 @@
 {
     [super viewDidLoad];
     
+    if ([self respondsToSelector:@selector(edgesForExtendedLayout)]){
+        self.edgesForExtendedLayout = UIRectEdgeNone;
+    }
 	// Do any additional setup after loading the view.
     self.title = @"TopBarMessage";
     
     self.textField = [[UITextField alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 40)];
-    self.textField.placeholder = @"Tap some text here to test";
+    self.textField.text = @"Tap some text here to test";
+    self.textField.clearButtonMode = UITextFieldViewModeWhileEditing;
+    [self.textField becomeFirstResponder];
     [self.view addSubview:self.textField];
     
     UIButton *showBtn = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -42,6 +47,7 @@
     [showBtn setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
     [showBtn addTarget:self action:@selector(showTop) forControlEvents:UIControlEventTouchUpInside];
     showBtn.frame = CGRectMake(100, 50, 50, 44);
+    showBtn.backgroundColor = [UIColor redColor];
     [self.view addSubview:showBtn];
 }
 

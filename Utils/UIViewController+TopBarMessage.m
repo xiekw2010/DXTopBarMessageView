@@ -95,10 +95,6 @@ static char TopWarningKey;
 
 - (void)showTopMessage:(NSString *)warningText
 {
-    if ([self respondsToSelector:@selector(edgesForExtendedLayout)] && self.edgesForExtendedLayout != UIEventSubtypeNone){
-        self.edgesForExtendedLayout = UIRectEdgeNone;
-    }
-    
     TopWarningView *topV = objc_getAssociatedObject(self, &TopWarningKey);
     if (!topV) {
         topV = [[TopWarningView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.bounds), 44)];

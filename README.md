@@ -15,19 +15,21 @@ A category base on UIViewController, easy to use and custom.
 
 1. Import "UIViewController+TopBarMessage.h" to your own viewController or the .pch file
 
-2. Just use it when you need it in this viewController
+2. If system version is >= iOS7, you must to set the viewController's edgesForExtendedLayout to UIRectEdgeNone, otherwise the viewControllers'view frame is different from iOS6;
 
 		- (void)viewDidLoad
 		{
-			//assume check out the net work bad
-
+			//Top message won't work without this setting;
+			if ([self respondsToSelector:@selector(edgesForExtendedLayout)])
+			        self.edgesForExtendedLayout = UIRectEdgeNone;
+			 
 			[self showTopMessage:@"The net work is bad now, please check it"];
 		}
 
 ### Maybe beyond your consideration
 
 1. Support the device rotation, just use it.
-2. In iOS7 it change your viewController's property edgesForExtendedLayout to UIRectEdgeNone. 
+2. In iOS7 it needs to change your viewController's property edgesForExtendedLayout to UIRectEdgeNone. 
 3. If you want to custom it, just change to code of TopWarningView class. And don't worry about the iconIgv property, a nil image is acceptable, the layout will adjust to middle alignment;
 
 
