@@ -9,31 +9,61 @@
 #import "UIViewController+TopBarMessage.h"
 #import <objc/runtime.h>
 
+#define kTopBarHeight 38.0f
+#define kDefaultDimissDelay 3.0f
+
+
+NSString * const kDXTopBarBackgroundColor = @"dx.kDXTopBarBackgroundColor";
+NSString * const kDXTopBarTextColor = @"dx.kDXTopBarTextColor";
+NSString * const kDXTopBarTextFont = @"dx.kDXTopBarTextFont";
+NSString * const kDXTopBarIcon = @"dx.kDXTopBarIcon";
+
+
 @interface  TopWarningView()
 
-@property (nonatomic, strong) UILabel *label;
+@property (nonatomic, strong) NSTimer *dimissTimer;
 
 @end
 
 @implementation TopWarningView
 
 
+- (void)dealloc
+{
+    [self.dimissTimer invalidate];
+    self.dimissTimer = nil;
+}
+
 - (instancetype)initWithFrame:(CGRect)frame
 {
     if (self = [super initWithFrame:frame]) {
         self.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-        self.backgroundColor = [UIColor colorWithRed:51.0/255.0 green:51.0/255.0 blue:51.0/255.0 alpha:1];
         self.label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 50, 50)];
         self.label.backgroundColor = [UIColor clearColor];
-        self.label.textColor = [UIColor whiteColor];
-        self.label.font = [UIFont systemFontOfSize:20.0f];
         self.label.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         [self addSubview:self.label];
         
-        self.iconIgv = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"ico_error"]];
+        self.iconIgv = [[UIImageView alloc] init];
         [self addSubview:self.iconIgv];
+        
+        UISwipeGestureRecognizer *swipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(dismiss)];
+        swipe.direction = UISwipeGestureRecognizerDirectionUp;
+        [self addGestureRecognizer:swipe];
+        
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapNow)];
+        [self addGestureRecognizer:tap];
+        
+        [self resetViews];
     }
     return self;
+}
+
+- (void)resetViews
+{
+    self.iconIgv.image = nil;
+    self.backgroundColor = [UIColor colorWithRed:0.64 green:0.65 blue:0.66 alpha:0.96];
+    self.label.textColor = [UIColor whiteColor];
+    self.label.font = [UIFont fontWithName:@"HelveticaNeue-Medium" size:17.0];
 }
 
 - (void)layoutSubviews
@@ -55,7 +85,14 @@
     [self setNeedsLayout];
 }
 
-- (void)removeFromSuperview
+- (void)tapNow
+{
+    if (self.tapHandler) {
+        self.tapHandler();
+    }
+}
+
+- (void)dismiss
 {
     CGRect selfFrame = self.frame;
     selfFrame.origin.y -= CGRectGetHeight(selfFrame);
@@ -64,7 +101,7 @@
         self.frame = selfFrame;
         self.alpha = 0.3;
     } completion:^(BOOL finished) {
-        [super removeFromSuperview];
+        [self removeFromSuperview];
     }];
 }
 
@@ -82,7 +119,13 @@
         } completion:^(BOOL finished) {
             [super willMoveToSuperview:newSuperview];
         }];
+        
+        [self.dimissTimer invalidate];
+        self.dimissTimer = nil;
+        self.dimissTimer = [NSTimer scheduledTimerWithTimeInterval:MAX(self.dimissDelay, kDefaultDimissDelay) target:self selector:@selector(dismiss) userInfo:nil repeats:0];
     }else {
+        [self.dimissTimer invalidate];
+        self.dimissTimer = nil;
         [super willMoveToSuperview:newSuperview];
     }
 }
@@ -93,23 +136,49 @@ static char TopWarningKey;
 
 @implementation UIViewController (TopBarMessage)
 
-- (void)showTopMessage:(NSString *)warningText
+- (void)showTopMessage:(NSString *)message
+{
+    [self showTopMessage:message topBarConfig:nil dismissDelay:kDefaultDimissDelay withTapBlock:nil];
+}
+
+- (void)showTopMessage:(NSString *)message topBarConfig:(NSDictionary *)config dismissDelay:(float)delay withTapBlock:(dispatch_block_t)tapHandler
 {
     TopWarningView *topV = objc_getAssociatedObject(self, &TopWarningKey);
     if (!topV) {
-        topV = [[TopWarningView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.bounds), 44)];
+        topV = [[TopWarningView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.bounds), kTopBarHeight)];
         objc_setAssociatedObject(self, &TopWarningKey, topV, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
-    topV.frame = CGRectMake(0, 0, CGRectGetWidth(self.view.bounds), 44);
-    topV.warningText = warningText;
-    [self.view addSubview:topV];
+    topV.frame = CGRectMake(0, 0, CGRectGetWidth(self.view.bounds), kTopBarHeight);
+    topV.warningText = message;
+    topV.tapHandler = tapHandler;
+    topV.dimissDelay = delay;
     
-    double delayInSeconds = 3.0;
-    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
-    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-        [topV removeFromSuperview];
-    });
+    if (config) {
+        UIColor *bgColor = config[kDXTopBarBackgroundColor];
+        if (bgColor && [bgColor isKindOfClass:[UIColor class]]) {
+            topV.backgroundColor = bgColor;
+        }
+        
+        UIColor *textColor = config[kDXTopBarTextColor];
+        if (textColor && [textColor isKindOfClass:[UIColor class]]) {
+            topV.label.textColor = textColor;
+        }
+        
+        UIImage *icon = config[kDXTopBarIcon];
+        if (icon && [icon isKindOfClass:[UIImage class]]) {
+            topV.iconIgv.image = icon;
+        }
+        
+        UIFont *font = config[kDXTopBarTextFont];
+        if (font && [font isKindOfClass:[UIFont class]]) {
+            topV.label.font = font;
+        }
+        
+    }else {
+        [topV resetViews];
+    }
+    
+    [self.view addSubview:topV];
 }
-
 
 @end

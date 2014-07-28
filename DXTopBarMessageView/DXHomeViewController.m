@@ -30,6 +30,8 @@
 {
     [super viewDidLoad];
     
+    self.view.backgroundColor = [UIColor whiteColor];
+    
     if ([self respondsToSelector:@selector(edgesForExtendedLayout)]){
         self.edgesForExtendedLayout = UIRectEdgeNone;
     }
@@ -41,19 +43,39 @@
     self.textField.clearButtonMode = UITextFieldViewModeWhileEditing;
     [self.textField becomeFirstResponder];
     [self.view addSubview:self.textField];
-    
+        
     UIButton *showBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [showBtn setTitle:@"show" forState:UIControlStateNormal];
+    [showBtn setTitle:@"Custom" forState:UIControlStateNormal];
     [showBtn setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
-    [showBtn addTarget:self action:@selector(showTop) forControlEvents:UIControlEventTouchUpInside];
-    showBtn.frame = CGRectMake(100, 50, 50, 44);
+    [showBtn addTarget:self action:@selector(showCustom) forControlEvents:UIControlEventTouchUpInside];
+    showBtn.frame = CGRectMake(40, 50, 100, 44);
     showBtn.backgroundColor = [UIColor redColor];
     [self.view addSubview:showBtn];
+    
+    UIButton *navButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [navButton setTitle:@"Default" forState:UIControlStateNormal];
+    [navButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [navButton addTarget:self action:@selector(showDefault) forControlEvents:UIControlEventTouchUpInside];
+    navButton.frame = CGRectMake(160, 50, 100, 44);
+    navButton.backgroundColor = [UIColor redColor];
+    [self.view addSubview:navButton];
+
 }
 
-- (void)showTop
+- (void)showDefault
 {
     [self showTopMessage:self.textField.text];
+}
+
+- (void)showCustom
+{
+    
+    NSDictionary *topBarConfig = @{kDXTopBarBackgroundColor:[UIColor blueColor], kDXTopBarTextColor : [UIColor yellowColor], kDXTopBarIcon : [UIImage imageNamed:@"ico_error.png"], kDXTopBarTextFont : [UIFont boldSystemFontOfSize:15.0]};
+    
+    [self showTopMessage:self.textField.text topBarConfig:topBarConfig dismissDelay:5.0 withTapBlock:^{
+        NSLog(@"i am tap now");
+        [self.navigationController pushViewController:[DXHomeViewController new] animated:YES];
+    }];
 }
 
 - (void)didReceiveMemoryWarning

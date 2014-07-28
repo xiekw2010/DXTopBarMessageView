@@ -15,22 +15,27 @@ A category base on UIViewController, easy to use and custom.
 
 1. Import "UIViewController+TopBarMessage.h" to your own viewController or the .pch file
 
-2. If system version is >= iOS7, you must to set the viewController's edgesForExtendedLayout to UIRectEdgeNone, otherwise the viewControllers'view frame is different from iOS6;
+2. In your viewController implementation, just use [self showTopMessage:@"Oops, some message appears"]
 
-		- (void)viewDidLoad
-		{
-			//Top message won't work without this setting;
-			if ([self respondsToSelector:@selector(edgesForExtendedLayout)])
-			        self.edgesForExtendedLayout = UIRectEdgeNone;
-			 
-			[self showTopMessage:@"The net work is bad now, please check it"];
-		}
+3. A more detail api is, which can custom the top bar display, and recieve the tap gesture response on the topBar.
+
+			/**
+			 *  show the message with config the top bar
+			 *
+			 *  @param message    the text to show
+			 *  @param config     the top bar view config, the whole version will be @{kDXTopBarBackgroundColor:[UIColor blueColor], kDXTopBarTextColor : [UIColor yellowColor], kDXTopBarIcon : [UIImage imageNamed:@"icon.png"], kDXTopBarTextFont : [UIFont boldSystemFontOfSize:15.0]}
+			 *  @param delay      time to dismiss
+			 *  @param tapHandler the tap handler
+			 */
+			- (void)showTopMessage:(NSString *)message topBarConfig:(NSDictionary *)config dismissDelay:(float)delay withTapBlock:(dispatch_block_t)tapHandler;
+
+
 
 ### Maybe beyond your consideration
 
 1. Support the device rotation, just use it.
-2. In iOS7 it needs to change your viewController's property edgesForExtendedLayout to UIRectEdgeNone. 
-3. If you want to custom it, just change to code of TopWarningView class. And don't worry about the iconIgv property, a nil image is acceptable, the layout will adjust to middle alignment;
+2. Gesture swipe to up will dismiss the topbar animated.
+2. In iOS7 it needs to change your viewController's property edgesForExtendedLayout to UIRectEdgeNone in the viewDidLoad, otherwise, the top will display on the top of the viewController not under the navigationbar.
 
 
 ### Finally
