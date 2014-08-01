@@ -42,4 +42,4 @@ A category base on UIViewController, easy to use and custom.
 
 Demo sceenShot
 
-![anyStr1](/screenShots/screenShot1.png "demo")
+![anyStr1](/screenShots/demo.gif "demo")

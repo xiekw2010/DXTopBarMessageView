@@ -71,7 +71,7 @@
 - (void)showCustom
 {
     
-    NSDictionary *topBarConfig = @{kDXTopBarBackgroundColor:[UIColor colorWithRed:0.3 green:0.3 blue:0.3 alpha:0.8], kDXTopBarTextColor : [UIColor yellowColor], kDXTopBarIcon : [UIImage imageNamed:@"ico_error.png"], kDXTopBarTextFont : [UIFont boldSystemFontOfSize:15.0]};
+    NSDictionary *topBarConfig = @{kDXTopBarBackgroundColor:[UIColor colorWithRed:0.3 green:0.3 blue:0.3 alpha:0.95], kDXTopBarTextColor : [UIColor yellowColor], kDXTopBarIcon : [UIImage imageNamed:@"ico_error.png"], kDXTopBarTextFont : [UIFont boldSystemFontOfSize:15.0]};
     
     [self showTopMessage:self.textField.text topBarConfig:topBarConfig dismissDelay:10.0 withTapBlock:^{
         NSLog(@"i am tap now");
