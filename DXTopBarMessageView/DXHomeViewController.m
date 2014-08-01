@@ -32,6 +32,7 @@
     
     self.view.backgroundColor = [UIColor whiteColor];
     
+    
     if ([self respondsToSelector:@selector(edgesForExtendedLayout)]){
         self.edgesForExtendedLayout = UIRectEdgeNone;
     }
@@ -70,9 +71,9 @@
 - (void)showCustom
 {
     
-    NSDictionary *topBarConfig = @{kDXTopBarBackgroundColor:[UIColor blueColor], kDXTopBarTextColor : [UIColor yellowColor], kDXTopBarIcon : [UIImage imageNamed:@"ico_error.png"], kDXTopBarTextFont : [UIFont boldSystemFontOfSize:15.0]};
+    NSDictionary *topBarConfig = @{kDXTopBarBackgroundColor:[UIColor colorWithRed:0.3 green:0.3 blue:0.3 alpha:0.8], kDXTopBarTextColor : [UIColor yellowColor], kDXTopBarIcon : [UIImage imageNamed:@"ico_error.png"], kDXTopBarTextFont : [UIFont boldSystemFontOfSize:15.0]};
     
-    [self showTopMessage:self.textField.text topBarConfig:topBarConfig dismissDelay:5.0 withTapBlock:^{
+    [self showTopMessage:self.textField.text topBarConfig:topBarConfig dismissDelay:10.0 withTapBlock:^{
         NSLog(@"i am tap now");
         [self.navigationController pushViewController:[DXHomeViewController new] animated:YES];
     }];

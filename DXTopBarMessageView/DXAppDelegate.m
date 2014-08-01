@@ -8,6 +8,7 @@
 
 #import "DXAppDelegate.h"
 #import "DXHomeViewController.h"
+#import "UIViewController+TopBarMessage.h"
 
 @implementation DXAppDelegate
 
@@ -21,6 +22,9 @@
     self.window.rootViewController = nacon;
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
+    
+    [UIViewController setTopMessageDefaultApperance:@{kDXTopBarBackgroundColor : [UIColor colorWithRed:0.64 green:0.65 blue:0.66 alpha:0.96], kDXTopBarTextColor : [UIColor whiteColor], kDXTopBarTextFont : [UIFont fontWithName:@"HelveticaNeue-Medium" size:17.0]}];
+
     return YES;
 }
 

@@ -19,6 +19,8 @@ NSString * const kDXTopBarTextFont = @"dx.kDXTopBarTextFont";
 NSString * const kDXTopBarIcon = @"dx.kDXTopBarIcon";
 
 
+static NSMutableDictionary *__defaultTopMessageConfig = nil;
+
 @interface  TopWarningView()
 
 @property (nonatomic, strong) NSTimer *dimissTimer;
@@ -60,10 +62,14 @@ NSString * const kDXTopBarIcon = @"dx.kDXTopBarIcon";
 
 - (void)resetViews
 {
-    self.iconIgv.image = nil;
-    self.backgroundColor = [UIColor colorWithRed:0.64 green:0.65 blue:0.66 alpha:0.96];
-    self.label.textColor = [UIColor whiteColor];
-    self.label.font = [UIFont fontWithName:@"HelveticaNeue-Medium" size:17.0];
+    if (!__defaultTopMessageConfig) {
+        __defaultTopMessageConfig = [@{kDXTopBarBackgroundColor : [UIColor colorWithRed:0.64 green:0.65 blue:0.66 alpha:0.96], kDXTopBarTextColor : [UIColor whiteColor], kDXTopBarTextFont : [UIFont fontWithName:@"HelveticaNeue-Medium" size:17.0]} mutableCopy];
+    }
+    
+    self.iconIgv.image = __defaultTopMessageConfig[kDXTopBarIcon];
+    self.backgroundColor = __defaultTopMessageConfig[kDXTopBarBackgroundColor];
+    self.label.textColor = __defaultTopMessageConfig[kDXTopBarTextColor];
+    self.label.font = __defaultTopMessageConfig[kDXTopBarTextFont];
 }
 
 - (void)layoutSubviews
@@ -135,6 +141,35 @@ NSString * const kDXTopBarIcon = @"dx.kDXTopBarIcon";
 static char TopWarningKey;
 
 @implementation UIViewController (TopBarMessage)
+
+
++ (void)setTopMessageDefaultApperance:(NSDictionary *)apperance
+{
+    if (!__defaultTopMessageConfig) {
+        __defaultTopMessageConfig = [NSMutableDictionary dictionary];
+    }
+    if (apperance) {
+        UIColor *bgColor = apperance[kDXTopBarBackgroundColor];
+        if (bgColor && [bgColor isKindOfClass:[UIColor class]]) {
+            __defaultTopMessageConfig[kDXTopBarBackgroundColor] = bgColor;
+        }
+        
+        UIColor *textColor = apperance[kDXTopBarTextColor];
+        if (textColor && [textColor isKindOfClass:[UIColor class]]) {
+            __defaultTopMessageConfig[kDXTopBarTextColor] = textColor;
+        }
+        
+        UIImage *icon = apperance[kDXTopBarIcon];
+        if (icon && [icon isKindOfClass:[UIImage class]]) {
+            __defaultTopMessageConfig[kDXTopBarIcon] = icon;
+        }
+        
+        UIFont *font = apperance[kDXTopBarTextFont];
+        if (font && [font isKindOfClass:[UIFont class]]) {
+            __defaultTopMessageConfig[kDXTopBarTextFont] = font;
+        }
+    }
+}
 
 - (void)showTopMessage:(NSString *)message
 {

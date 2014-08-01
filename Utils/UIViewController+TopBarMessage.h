@@ -23,7 +23,14 @@
 @interface UIViewController (TopBarMessage)
 
 /**
- *  show the message with config the top bar
+ *  Set the global default apperance of the top message, may be the appdelegate class is a good place to setup
+ *
+ *  @param apperance the top bar view config, the whole version will be @{kDXTopBarBackgroundColor:[UIColor blueColor], kDXTopBarTextColor : [UIColor yellowColor], kDXTopBarIcon : [UIImage imageNamed:@"icon.png"], kDXTopBarTextFont : [UIFont boldSystemFontOfSize:15.0]}
+ */
++ (void)setTopMessageDefaultApperance:(NSDictionary *)apperance;
+
+/**
+ *  show the message with config on the top bar, note the config won't change the default top message apperance, this is the setTopMessageDefaultApperance: does.
  *
  *  @param message    the text to show
  *  @param config     the top bar view config, the whole version will be @{kDXTopBarBackgroundColor:[UIColor blueColor], kDXTopBarTextColor : [UIColor yellowColor], kDXTopBarIcon : [UIImage imageNamed:@"icon.png"], kDXTopBarTextFont : [UIFont boldSystemFontOfSize:15.0]}
@@ -38,6 +45,7 @@
  *  @param message message to tell
  */
 - (void)showTopMessage:(NSString *)message;
+
 
 @end
 
