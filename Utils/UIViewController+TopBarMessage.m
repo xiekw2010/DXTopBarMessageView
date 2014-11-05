@@ -74,14 +74,15 @@ static NSMutableDictionary *__defaultTopMessageConfig = nil;
 
 - (void)layoutSubviews
 {
-    CGSize textSize = [self.label.text sizeWithFont:self.label.font constrainedToSize:CGSizeMake(CGRectGetWidth(self.bounds) * 0.9, 20.f) lineBreakMode:NSLineBreakByTruncatingTail];
+    CGSize textSize = [self.label.text boundingRectWithSize:CGSizeMake(CGRectGetWidth(self.bounds) * 0.9, CGFLOAT_MAX) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:self.label.font} context:nil].size;
     CGFloat betweenIconAndText  = 10.0f;
     CGFloat iconWidth = 20.0f;
+    CGFloat labelDefaultHeight = 20.0;
     if (!self.iconIgv.image) {
         iconWidth = 0.0f;
     }
     self.iconIgv.frame = CGRectMake((CGRectGetWidth(self.bounds) - (textSize.width + iconWidth + betweenIconAndText)) * 0.5, (CGRectGetHeight(self.bounds) - iconWidth) * 0.5, iconWidth, iconWidth);
-    self.label.frame = CGRectMake(CGRectGetMaxX(self.iconIgv.frame) + betweenIconAndText, (CGRectGetHeight(self.bounds) - textSize.height) * 0.5, textSize.width, textSize.height);
+    self.label.frame = CGRectMake(CGRectGetMaxX(self.iconIgv.frame) + betweenIconAndText, (CGRectGetHeight(self.bounds) - labelDefaultHeight) * 0.5, textSize.width, labelDefaultHeight);
 }
 
 - (void)setWarningText:(NSString *)warningText
@@ -197,6 +198,7 @@ static char TopWarningKey;
             case UIRectEdgeNone:
             case UIRectEdgeRight:
                 startY = 0.0;
+                break;
             default:
                 break;
         }
