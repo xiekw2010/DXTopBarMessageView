@@ -116,9 +116,10 @@ static NSMutableDictionary *__defaultTopMessageConfig = nil;
     if (newSuperview) {
         self.alpha = 1.0;
         CGRect selfFrame = self.frame;
+        CGFloat originY = self.frame.origin.y;
         selfFrame.origin.y -= CGRectGetHeight(selfFrame);
         self.frame = selfFrame;
-        selfFrame.origin.y = 0;
+        selfFrame.origin.y = originY;
         
         [UIView animateWithDuration:0.25f animations:^{
             self.frame = selfFrame;
@@ -183,7 +184,26 @@ static char TopWarningKey;
         topV = [[TopWarningView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.bounds), kTopBarHeight)];
         objc_setAssociatedObject(self, &TopWarningKey, topV, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
-    topV.frame = CGRectMake(0, 0, CGRectGetWidth(self.view.bounds), kTopBarHeight);
+    
+    CGFloat startY = 0.0;
+    if ([self respondsToSelector:@selector(edgesForExtendedLayout)]) {
+        switch (self.edgesForExtendedLayout) {
+            case UIRectEdgeTop:
+            case UIRectEdgeAll:
+                startY = 64.0;
+                break;
+            case UIRectEdgeBottom:
+            case UIRectEdgeLeft:
+            case UIRectEdgeNone:
+            case UIRectEdgeRight:
+                startY = 0.0;
+            default:
+                break;
+        }
+    }
+
+    
+    topV.frame = CGRectMake(0, startY, CGRectGetWidth(self.view.bounds), kTopBarHeight);
     topV.warningText = message;
     topV.tapHandler = tapHandler;
     topV.dimissDelay = delay;
